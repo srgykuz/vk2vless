@@ -20,6 +20,10 @@ VK_TUNNEL_WS_ORIGIN = os.getenv("VK_TUNNEL_WS_ORIGIN", "1")
 VK_TUNNEL_INSECURE = os.getenv("VK_TUNNEL_INSECURE", "0")
 VK_TUNNEL_TIMEOUT = os.getenv("VK_TUNNEL_TIMEOUT", "5000")
 
+VLESS_TITLE = os.getenv("VLESS_TITLE", "vk-tunnel-vless")
+VLESS_ID = os.getenv("VLESS_ID", "")
+VLESS_FP = os.getenv("VLESS_FP", "chrome")
+
 VMESS_TITLE = os.getenv("VMESS_TITLE", "vk-tunnel-vmess")
 VMESS_ID = os.getenv("VMESS_ID", "")
 VMESS_FP = os.getenv("VMESS_FP", "chrome")
@@ -99,8 +103,13 @@ def handle(proc: subprocess.Popen):
     wss_url = urllib.parse.urlparse(wss)
     wss_host = socket.gethostbyname(wss_url.netloc)
 
-    vmess = wss_to_vmess(wss_url, wss_host)
-    logger.info(f"vmess: {vmess}")
+    if VLESS_ID:
+        vless = wss_to_vless(wss_url, wss_host)
+        logger.info(f"vless: {vless}")
+
+    if VMESS_ID:
+        vmess = wss_to_vmess(wss_url, wss_host)
+        logger.info(f"vmess: {vmess}")
 
     proc.wait()
 
@@ -167,6 +176,24 @@ def extract_wss(output: str) -> str:
         return ""
 
     return output[start:end+len(end_s)]
+
+
+def wss_to_vless(url: urllib.parse.ParseResult, netloc_ip: str) -> str:
+    cfg = {
+        "encryption": "none",
+        "security": "tls",
+        "sni": "tunnel.vk-apps.com",
+        "alpn": "h2,http/1.1",
+        "fp": VLESS_FP,
+        "host": url.netloc,
+        "path": "/",
+        "type": "ws",
+    }
+    cfg_s = "&".join([f"{k}={v}" for k, v in cfg.items()])
+    vless = f"vless://{VLESS_ID}@{netloc_ip}:443?{cfg_s}#{VLESS_TITLE}"
+    vless = urllib.parse.quote(vless, safe="~@#$&()*!+=:;,?/\'")
+
+    return vless
 
 
 def wss_to_vmess(url: urllib.parse.ParseResult, netloc_ip: str) -> str:
