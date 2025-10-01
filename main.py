@@ -212,7 +212,7 @@ def wss_to_vmess(url: urllib.parse.ParseResult, netloc_ip: str) -> str:
         "sni": "tunnel.vk-apps.com",
         "tls": "tls",
         "type": "none",
-        "v": "2"
+        "v": "2",
     }
     s = json.dumps(cfg)
     b = s.encode("utf-8")
