@@ -14,17 +14,17 @@ PATH_NODE = os.getenv("PATH_NODE", "")
 PATH_VK_TUNNEL = os.getenv("PATH_VK_TUNNEL", "")
 
 VK_TUNNEL_HOST = os.getenv("VK_TUNNEL_HOST", "127.0.0.1")
-VK_TUNNEL_PORT = os.getenv("VK_TUNNEL_PORT", "443")
+VK_TUNNEL_PORT = os.getenv("VK_TUNNEL_PORT", "2007")
 VK_TUNNEL_WS_PROTOCOL = os.getenv("VK_TUNNEL_WS_PROTOCOL", "ws")
 VK_TUNNEL_WS_ORIGIN = os.getenv("VK_TUNNEL_WS_ORIGIN", "1")
 VK_TUNNEL_INSECURE = os.getenv("VK_TUNNEL_INSECURE", "0")
 VK_TUNNEL_TIMEOUT = os.getenv("VK_TUNNEL_TIMEOUT", "5000")
 
-VLESS_TITLE = os.getenv("VLESS_TITLE", "vk-tunnel-vless")
+VLESS_TITLE = os.getenv("VLESS_TITLE", "vk-vless")
 VLESS_ID = os.getenv("VLESS_ID", "")
 VLESS_FP = os.getenv("VLESS_FP", "chrome")
 
-VMESS_TITLE = os.getenv("VMESS_TITLE", "vk-tunnel-vmess")
+VMESS_TITLE = os.getenv("VMESS_TITLE", "vk-vmess")
 VMESS_ID = os.getenv("VMESS_ID", "")
 VMESS_FP = os.getenv("VMESS_FP", "chrome")
 
