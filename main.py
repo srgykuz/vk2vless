@@ -12,6 +12,7 @@ import time
 
 PATH_NODE = os.getenv("PATH_NODE", "")
 PATH_VK_TUNNEL = os.getenv("PATH_VK_TUNNEL", "")
+PATH_RUNTIME = os.getenv("PATH_RUNTIME", "./var/run")
 
 VK_TUNNEL_HOST = os.getenv("VK_TUNNEL_HOST", "127.0.0.1")
 VK_TUNNEL_PORT = os.getenv("VK_TUNNEL_PORT", "2007")
@@ -86,6 +87,8 @@ def precondition():
 
 
 def handle(proc: subprocess.Popen):
+    write_runtime("vk-tunnel.pid", proc.pid)
+
     output = capture(proc)
     logger.debug(f"captured:\n{output}\n")
 
@@ -95,6 +98,7 @@ def handle(proc: subprocess.Popen):
         raise UnathorizedError()
 
     wss = extract_wss(output)
+    write_runtime("wss.txt", wss)
     logger.info(f"wss: {wss}")
 
     if not wss:
@@ -105,10 +109,12 @@ def handle(proc: subprocess.Popen):
 
     if VLESS_ID:
         vless = wss_to_vless(wss_url, wss_host)
+        write_runtime("vless.txt", vless)
         logger.info(f"vless: {vless}")
 
     if VMESS_ID:
         vmess = wss_to_vmess(wss_url, wss_host)
+        write_runtime("vmess.txt", vmess)
         logger.info(f"vmess: {vmess}")
 
     proc.wait()
@@ -160,6 +166,16 @@ def capture(proc: subprocess.Popen) -> str:
             )
 
     return output
+
+
+def write_runtime(file: str, data: str):
+    os.makedirs(PATH_RUNTIME, exist_ok=True)
+
+    path = os.path.join(PATH_RUNTIME, file)
+    data = str(data)
+
+    with open(path, "w+") as f:
+        f.write(data)
 
 
 def extract_wss(output: str) -> str:
