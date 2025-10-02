@@ -1,0 +1,14 @@
+[Unit]
+Description=vk2vless
+After=network.target nss-lookup.target
+Wants=network.target
+
+[Service]
+User=nobody
+NoNewPrivileges=true
+EnvironmentFile=/opt/vk2vless/.env
+ExecStart=/usr/bin/python3 /opt/vk2vless/vk2vless.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
