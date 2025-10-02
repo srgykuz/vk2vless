@@ -6,7 +6,7 @@ LISTEN_HOST = os.getenv("LISTEN_HOST", "127.0.0.1")
 LISTEN_PORT = int(os.getenv("LISTEN_PORT", 8000))
 
 DIR = os.getenv("DIR", "./var/run")
-PATH = os.getenv("PATH", "/test")
+PATH = os.getenv("PATH", "/secret")
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):

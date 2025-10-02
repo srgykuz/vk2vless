@@ -21,12 +21,12 @@ VK_TUNNEL_WS_ORIGIN = os.getenv("VK_TUNNEL_WS_ORIGIN", "1")
 VK_TUNNEL_INSECURE = os.getenv("VK_TUNNEL_INSECURE", "0")
 VK_TUNNEL_TIMEOUT = os.getenv("VK_TUNNEL_TIMEOUT", "5000")
 
-VLESS_TITLE = os.getenv("VLESS_TITLE", "vk-vless")
 VLESS_ID = os.getenv("VLESS_ID", "")
+VLESS_TITLE = os.getenv("VLESS_TITLE", "vk-vless")
 VLESS_FP = os.getenv("VLESS_FP", "chrome")
 
-VMESS_TITLE = os.getenv("VMESS_TITLE", "vk-vmess")
 VMESS_ID = os.getenv("VMESS_ID", "")
+VMESS_TITLE = os.getenv("VMESS_TITLE", "vk-vmess")
 VMESS_FP = os.getenv("VMESS_FP", "chrome")
 
 YA_PROXY_TO = os.getenv("YA_PROXY_TO", "http://hostname")
@@ -91,7 +91,7 @@ def precondition():
         try:
             url_to_ya_proxy(urllib.parse.urlparse(YA_PROXY_TO))
         except Exception as e:
-            raise Exception(f"YA_PROXY_TO is invalid: {e}")
+            raise Exception(f"YA_PROXY_TO env is invalid: {e}")
 
 
 def handle(proc: subprocess.Popen):
@@ -101,7 +101,7 @@ def handle(proc: subprocess.Popen):
     logger.debug(f"captured:\n{output}\n")
 
     if not output:
-        raise Exception("Empty output")
+        raise Exception("output is empty")
     elif "oauth.vk.ru/code_auth" in output:
         raise UnathorizedError()
 
@@ -110,7 +110,7 @@ def handle(proc: subprocess.Popen):
     logger.info(f"wss: {wss}")
 
     if not wss:
-        raise Exception("Empty WSS")
+        raise Exception("wss is empty")
 
     wss_url = urllib.parse.urlparse(wss)
     wss_host = socket.gethostbyname(wss_url.netloc)
@@ -181,7 +181,7 @@ def capture(proc: subprocess.Popen) -> str:
     return output
 
 
-def write_runtime(file: str, data: str):
+def write_runtime(file: str, data: str | int):
     os.makedirs(PATH_RUNTIME, exist_ok=True)
 
     path = os.path.join(PATH_RUNTIME, file)
