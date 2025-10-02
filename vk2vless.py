@@ -29,6 +29,8 @@ VMESS_TITLE = os.getenv("VMESS_TITLE", "vk-vmess")
 VMESS_ID = os.getenv("VMESS_ID", "")
 VMESS_FP = os.getenv("VMESS_FP", "chrome")
 
+YA_PROXY_TO = os.getenv("YA_PROXY_TO", "http://hostname")
+
 LOG_LEVEL = int(os.getenv("LOG_LEVEL", logging.INFO))
 CAPTURE_TIMEOUT = int(os.getenv("CAPTURE_TIMEOUT", 20))
 
@@ -85,6 +87,12 @@ def precondition():
         if not os.getenv(key):
             raise Exception(f"{key} env is empty")
 
+    if YA_PROXY_TO:
+        try:
+            url_to_ya_proxy(urllib.parse.urlparse(YA_PROXY_TO))
+        except Exception as e:
+            raise Exception(f"YA_PROXY_TO is invalid: {e}")
+
 
 def handle(proc: subprocess.Popen):
     write_runtime("vk-tunnel.pid", proc.pid)
@@ -116,6 +124,11 @@ def handle(proc: subprocess.Popen):
         vmess = wss_to_vmess(wss_url, wss_host)
         write_runtime("vmess.txt", vmess)
         logger.info(f"vmess: {vmess}")
+
+    if YA_PROXY_TO:
+        to = urllib.parse.urlparse(YA_PROXY_TO)
+        ya = url_to_ya_proxy(to)
+        logger.info(f"yandex proxy: {ya}")
 
     proc.wait()
 
@@ -236,6 +249,24 @@ def wss_to_vmess(url: urllib.parse.ParseResult, netloc_ip: str) -> str:
     vmess = f"vmess://{b64}"
 
     return vmess
+
+
+def url_to_ya_proxy(url: urllib.parse.ParseResult) -> str:
+    host = url.netloc
+    path = url.path
+
+    if not host:
+        raise Exception("host is empty")
+
+    if ":" in host:
+        raise Exception("port is not allowed")
+
+    if host == "hostname":
+        host = "[hostname]"
+
+    path = path.removesuffix("/")
+
+    return f"https://translated.turbopages.org/proxy_u/en-ru.ru/{host}{path}/[file].txt"
 
 
 if __name__ == "__main__":
