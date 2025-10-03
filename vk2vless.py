@@ -128,6 +128,7 @@ def handle(proc: subprocess.Popen):
     if YA_PROXY_TO:
         to = urllib.parse.urlparse(YA_PROXY_TO)
         ya = url_to_ya_proxy(to)
+        write_runtime("ya.txt", ya)
         logger.info(f"yandex proxy: {ya}")
 
     proc.wait()
