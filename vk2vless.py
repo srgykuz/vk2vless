@@ -74,7 +74,7 @@ def main():
             logger.info(f"terminated, code={proc.returncode}")
 
         if run:
-            time.sleep(1)
+            time.sleep(5)
 
 
 def precondition():
