@@ -33,6 +33,7 @@ YA_PROXY_TO = os.getenv("YA_PROXY_TO", "http://hostname")
 
 LOG_LEVEL = int(os.getenv("LOG_LEVEL", logging.INFO))
 CAPTURE_TIMEOUT = int(os.getenv("CAPTURE_TIMEOUT", 20))
+RUN_INTERVAL = int(os.getenv("RUN_INTERVAL", 5))
 
 
 logging.basicConfig(
@@ -74,7 +75,7 @@ def main():
             logger.info(f"terminated, code={proc.returncode}")
 
         if run:
-            time.sleep(5)
+            time.sleep(RUN_INTERVAL)
 
 
 def precondition():
