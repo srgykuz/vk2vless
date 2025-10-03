@@ -1,5 +1,5 @@
 wget -O /tmp/node-v22.20.0-linux-x64.tar.xz https://nodejs.org/dist/v22.20.0/node-v22.20.0-linux-x64.tar.xz
-tar -xf /tmp/node-v22.20.0-linux-x64.tar.xz
+tar -C /tmp -xf /tmp/node-v22.20.0-linux-x64.tar.xz
 rm /tmp/node-v22.20.0-linux-x64.tar.xz
 mv /tmp/node-v22.20.0-linux-x64 /usr/local
 
