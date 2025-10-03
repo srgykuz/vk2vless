@@ -1,0 +1,44 @@
+{
+    "log": {
+        "loglevel": "info"
+    },
+    "inbounds": [
+        {
+            "tag": "vk-tunnel",
+            "protocol": "vmess",
+            "port": 2007,
+            "settings": {
+                "clients": [
+                    {
+                        "id": "89e8d4c2-295c-43ea-bc38-6094d426fd78",
+                        "email": "user"
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "ws"
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "tag": "direct",
+            "protocol": "freedom"
+        },
+        {
+            "tag": "block",
+            "protocol": "blackhole"
+        }
+    ],
+    "routing": {
+        "domainStrategy": "IPOnDemand",
+        "rules": [
+            {
+                "ip": [
+                    "geoip:private"
+                ],
+                "outboundTag": "block"
+            }
+        ]
+    }
+}
