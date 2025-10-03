@@ -12,6 +12,7 @@ import time
 
 PATH_NODE = os.getenv("PATH_NODE", "")
 PATH_VK_TUNNEL = os.getenv("PATH_VK_TUNNEL", "")
+PATH_VK_CONFIG = os.getenv("PATH_VK_CONFIG", "./etc")
 PATH_RUNTIME = os.getenv("PATH_RUNTIME", "./var/run")
 
 VK_TUNNEL_HOST = os.getenv("VK_TUNNEL_HOST", "127.0.0.1")
@@ -51,6 +52,7 @@ class UnathorizedError(Exception):
 
 
 def main():
+    init()
     precondition()
 
     run = True
@@ -76,6 +78,16 @@ def main():
 
         if run:
             time.sleep(RUN_INTERVAL)
+
+
+def init():
+    if PATH_VK_CONFIG:
+        path = PATH_VK_CONFIG
+
+        if not os.path.isabs(path):
+            path = os.path.join(os.getcwd(), path)
+
+        os.environ["XDG_CONFIG_HOME"] = path
 
 
 def precondition():
