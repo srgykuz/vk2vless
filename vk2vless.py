@@ -165,12 +165,13 @@ def capture(proc: subprocess.Popen) -> str:
     reached_end = False
 
     while not reached_end:
-        rlist, _, _ = select.select([proc.stdout, proc.stderr], [], [], CAPTURE_TIMEOUT)
+        running = proc.poll() is None
+        readable, _, _ = select.select([proc.stdout, proc.stderr], [], [], CAPTURE_TIMEOUT)
 
-        if not rlist:
+        if not running or not readable:
             break
 
-        for f in rlist:
+        for f in readable:
             b: bytes = f.read(128)
             output += b.decode("utf-8")
             reached_end = (
