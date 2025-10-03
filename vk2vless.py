@@ -104,6 +104,8 @@ def handle(proc: subprocess.Popen):
         raise Exception("output is empty")
     elif "oauth.vk.ru/code_auth" in output:
         raise UnathorizedError()
+    elif "disconnected" in output:
+        raise Exception("disconnected")
 
     wss = extract_wss(output)
     write_runtime("wss.txt", wss)
