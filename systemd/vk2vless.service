@@ -6,7 +6,7 @@ Wants=network.target
 [Service]
 User=nobody
 NoNewPrivileges=true
-EnvironmentFile=/opt/vk2vless/.env
+EnvironmentFile=/opt/vk2vless/etc/env
 ExecStart=/usr/bin/python3 /opt/vk2vless/vk2vless.py
 Restart=on-failure
 
