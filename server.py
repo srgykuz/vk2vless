@@ -5,7 +5,7 @@ import http.server
 LISTEN_HOST = os.getenv("LISTEN_HOST", "127.0.0.1")
 LISTEN_PORT = int(os.getenv("LISTEN_PORT", 8000))
 
-PATH_RUNTIME = os.getenv("PATH_RUNTIME", "./var/run")
+DIR_RUNTIME = os.getenv("DIR_RUNTIME", "./var")
 PATH_SECRET = os.getenv("PATH_SECRET", "/secret")
 
 
@@ -18,7 +18,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     ]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, directory=PATH_RUNTIME)
+        super().__init__(*args, **kwargs, directory=DIR_RUNTIME)
 
     def send_head(self):
         if self.path.startswith(PATH_SECRET):

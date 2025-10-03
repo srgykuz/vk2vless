@@ -10,10 +10,11 @@ import base64
 import time
 
 
-PATH_NODE = os.getenv("PATH_NODE", "")
-PATH_VK_TUNNEL = os.getenv("PATH_VK_TUNNEL", "")
-PATH_VK_CONFIG = os.getenv("PATH_VK_CONFIG", "./etc")
-PATH_RUNTIME = os.getenv("PATH_RUNTIME", "./var/run")
+BIN_NODE = os.getenv("BIN_NODE", "")
+BIN_VK_TUNNEL = os.getenv("BIN_VK_TUNNEL", "")
+
+DIR_VK_CONFIG = os.getenv("DIR_VK_CONFIG", "./etc")
+DIR_RUNTIME = os.getenv("DIR_RUNTIME", "./var")
 
 VK_TUNNEL_HOST = os.getenv("VK_TUNNEL_HOST", "127.0.0.1")
 VK_TUNNEL_PORT = os.getenv("VK_TUNNEL_PORT", "2007")
@@ -53,7 +54,7 @@ class UnathorizedError(Exception):
 
 def main():
     init()
-    precondition()
+    check()
 
     run = True
 
@@ -81,8 +82,8 @@ def main():
 
 
 def init():
-    if PATH_VK_CONFIG:
-        path = PATH_VK_CONFIG
+    if DIR_VK_CONFIG:
+        path = DIR_VK_CONFIG
 
         if not os.path.isabs(path):
             path = os.path.join(os.getcwd(), path)
@@ -90,10 +91,10 @@ def init():
         os.environ["XDG_CONFIG_HOME"] = path
 
 
-def precondition():
+def check():
     required = [
-        "PATH_NODE",
-        "PATH_VK_TUNNEL",
+        "BIN_NODE",
+        "BIN_VK_TUNNEL",
     ]
 
     for key in required:
@@ -151,8 +152,8 @@ def handle(proc: subprocess.Popen):
 
 def spawn() -> subprocess.Popen:
     args = [
-        PATH_NODE,
-        PATH_VK_TUNNEL,
+        BIN_NODE,
+        BIN_VK_TUNNEL,
         "--host",
         VK_TUNNEL_HOST,
         "--port",
@@ -199,9 +200,9 @@ def capture(proc: subprocess.Popen) -> str:
 
 
 def write_runtime(file: str, data: str | int):
-    os.makedirs(PATH_RUNTIME, exist_ok=True)
+    os.makedirs(DIR_RUNTIME, exist_ok=True)
 
-    path = os.path.join(PATH_RUNTIME, file)
+    path = os.path.join(DIR_RUNTIME, file)
     data = str(data)
 
     with open(path, "w+") as f:
